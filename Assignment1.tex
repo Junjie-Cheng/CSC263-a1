@@ -1,0 +1,94 @@
+   
+\documentclass[11pt, answers]{exam}
+\renewcommand{\baselinestretch}{1.05}
+\usepackage{amsmath,amsthm,verbatim,amssymb,amsfonts,amscd, graphicx}
+\usepackage{graphics}
+
+\usepackage{afterpage}
+\usepackage{caption}
+
+\usepackage{tikz}
+\usepackage{fancybox}
+
+\usepackage{clrscode3e}
+
+\topmargin0.0cm
+\headheight0.0cm
+\headsep0.0cm
+\oddsidemargin0.0cm
+\textheight23.0cm
+\textwidth16.5cm
+\footskip1.0cm
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{corollary}{Corollary}
+\newtheorem{lemma}{Lemma}
+\newtheorem{proposition}{Proposition}
+\newtheorem*{surfacecor}{Corollary 1}
+\newtheorem{conjecture}{Conjecture}  
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+
+ \begin{document}
+ 
+
+
+\title{CSC263: Assignment 1}
+\date{January 16th, 2017}
+\author{Junjie Cheng(1002770539),}
+\maketitle
+
+\unframedsolutions
+
+\begin{questions}
+
+\question
+
+In the following procedure, the input is an array $A[1..n]$ of arbitrary integers, $A.size$ is a variable containing the size $n$ of the array $A$ (assume that $A$ contains at least $n \ge 2$ elements), and “return” means return from the procedure call.
+
+\begin{codebox}
+\Procname{Procedure nothing(A)}
+\li $A[i] := i$
+\li $n := A.size$
+\li \For $i \gets 2$ \To $n$ \Do
+\li 	\For $j \gets 1$ \To $i-1$ do $A[j] := A[j]+1$
+\li		\If $A[i]$ is not equal to $A[i-1]$ then \Return \End 
+		\End 
+	\End
+\li \Return
+\end{codebox}
+
+Let $T(n)$ be the worst-case time complexity of executing procedure $nothing()$ on an array $A$ of size $n \ge 2$. Assume that assignments, comparisons and arithmetic operations, like additions, take a constant amount of time each.
+
+\begin{parts}
+\part (5 marks) State whether $T(n)$ is $O(n^2)$ and justify your answer.
+\part (15 marks) State whether $T(n)$ is $\Omega(n^2)$ and justify your answer.
+\end{parts}
+
+
+\begin{solution}
+In the worst case, the condition in line 5 is always evaluated false except in the $n-1^{th}$ iteration (in which $i=n$). This guarantees that the outer for loop (line $3-5$) is executed $n-1$ times before the function returns.
+This is possible. Consider the array $A$ where $A[k]=k$.
+Consider the $m^{th}$ iteration of the outer for loop. Right before line 5 is executed, $A[m-1]$ is incremented by 1 only once (only incremented in the $m^{th}$ iteration, since in the previous iterations, $j$ is iterated through $1$ to $i-1$ only, and $i-1<m-1$ so $A[m-1]$ is not incremented). So $A[m-1]=m-1+1=m=A[m]$, and the condition in line 5 is evaluated false; function will not return.
+Both assignment and comparison take linear time. Suppose each assignment takes a time and each comparison takes c time.
+Line 1 and 2 takes $2a$ time. In $i^{th}$ iteration of the outer loop, line 4 is executed $i-1$ times, taking $2a(i-1)$ time. Line 5 is executed $1$ time in each iteration, taking $c$ time. Note that only in the last iteration($i=n$), the if condition is evaluated true and the function returns. The outer loop iterates from $i=2$ to $i=n$, so the outer loop takes $$\sum_{i=2}^{n} a+(i-1)(2a)+c=(n^2-1)a+(n-1)c$$ time.
+
+So, $$T(n)=2a+(n^2-1)a+(n-1)c=(n^2+1)a+(n-1)c$$
+\begin{parts}
+\part $T(n) \in O(n^2)$ 
+
+\part $T(n) \in \Omega(n^2)$ 
+
+\end{parts}
+
+\end{solution}
+
+\question
+\begin{solution}
+
+\end{solution}
+
+\end{questions}
+
+
+\end{document}
