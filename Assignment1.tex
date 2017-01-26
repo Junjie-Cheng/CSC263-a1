@@ -35,7 +35,7 @@
 
 \title{CSC263: Assignment 1}
 \date{January 16th, 2017}
-\author{Junjie Cheng(1002770539),}
+\author{Junjie Cheng(chenjunj),}
 \maketitle
 
 \unframedsolutions
@@ -67,28 +67,70 @@ Let $T(n)$ be the worst-case time complexity of executing procedure $nothing()$ 
 
 
 \begin{solution}
-In the worst case, the condition in line 5 is always evaluated false except in the $n-1^{th}$ iteration (in which $i=n$). This guarantees that the outer for loop (line $3-5$) is executed $n-1$ times before the function returns.
-This is possible. Consider the array $A$ where $A[k]=k$.
-Consider the $m^{th}$ iteration of the outer for loop. Right before line 5 is executed, $A[m-1]$ is incremented by 1 only once (only incremented in the $m^{th}$ iteration, since in the previous iterations, $j$ is iterated through $1$ to $i-1$ only, and $i-1<m-1$ so $A[m-1]$ is not incremented). So $A[m-1]=m-1+1=m=A[m]$, and the condition in line 5 is evaluated false; function will not return.
-Both assignment and comparison take linear time. Suppose each assignment takes a time and each comparison takes c time.
-Line 1 and 2 takes $2a$ time. In $i^{th}$ iteration of the outer loop, line 4 is executed $i-1$ times, taking $2a(i-1)$ time. Line 5 is executed $1$ time in each iteration, taking $c$ time. Note that only in the last iteration($i=n$), the if condition is evaluated true and the function returns. The outer loop iterates from $i=2$ to $i=n$, so the outer loop takes $$\sum_{i=2}^{n} a+(i-1)(2a)+c=(n^2-1)a+(n-1)c$$ time.
+In the worst case, the condition in line 5 is should be evaluated false as many times as possible, except possibly in the $n-1^{th}$ iteration (in which $i=n$). \\
+In fact, it is possible for line 5 to be evaluated false $n-2$ times. This guarantees that the outer for loop (line $3-5$) is executed $n-1$ times before the function returns.\\
+Consider the array $A$ where $A[k]=k$.\\
+Consider the $m^{th}$ iteration of the outer for loop. Right before line 5 is executed, $A[m-1]$ is incremented by 1 only once (only incremented in the $m^{th}$ iteration, since in the previous iterations, $j$ is iterated through $1$ to $i-1$ only, and $i-1<m-1$ so $A[m-1]$ is not incremented). So $A[m-1]=m-1+1=m=A[m]$, and the condition in line 5 is evaluated false; function will not return.\\
+Both assignment and comparison take linear time. Suppose each assignment takes a time and each comparison takes c time.\\
+Line 1 and 2 takes $2a$ time. In $i^{th}$ iteration of the outer loop, line 4 is executed $i-1$ times, taking $2a(i-1)$ time. Line 5 is executed $1$ time in each iteration, taking $c$ time. \\Note that only in the last iteration($i=n$), the if condition is evaluated true and the function returns. The outer loop iterates from $i=2$ to $i=n$, so the outer loop takes $$\sum_{i=2}^{n} a+(i-1)(2a)+c=(n^2-1)a+(n-1)c$$ time.
 
 So, $$T(n)=2a+(n^2-1)a+(n-1)c=(n^2+1)a+(n-1)c$$
+
+Note that there exist positive constant$c_1=a$, $c_2=2a+c$, $n_0=3$ such that $$\forall n\geq n_0. 0\leq c_1n^2 \leq T(n) \leq c_2n^2$$
+So, $$T(n) \in \Theta(n^2)$$, and thus,
 \begin{parts}
 \part $T(n) \in O(n^2)$ 
 
 \part $T(n) \in \Omega(n^2)$ 
 
 \end{parts}
-
+follows immediately.
 \end{solution}
 
 \question
 \begin{solution}
+\begin{parts}
+\part
+First, create an min heap using the smallest element in each list. In each node, also record the list where the integer comes from and the integer's position in the list.
+Then execute the following steps $m$ times.
+\begin{codebox}
+    \li Extract the minimum element in the min heap.
+    \li Print the integer.
+    \li Find the next integer in the original list. If it exists, add it to the min heap, also \\record the list and position in the node. If the extracted element is also the last \\element in the original list, do nothing.
+
+\end{codebox}
+
+This algorithm works because the min heap contains the smallest element of each list when it is created. When the minimum in the min heap is taken, the minimum of the unprinted integers in the same list is added to the min heap, unless all elements in that list has been printed. This ensures that the min heap always contains the smallest unprinted integer across the lists. So when minimum is extracted, it must be the smallest unprinted integer. \\Thus, the first $m$ integers extracted from the min heap must be the smallest $m$ elements from $A_1$ to $A_n$ in increasing sorted order.
+
+\part
+Building a min heap of $k$ elements by min-heapify takes $O(k)$ time.\\
+Note that the heap has at most $k$ elements, so insertion, extraction takes $O(\log k)$ time. Printing, find the next element in the list takes $O(1)$ time. The loop is executed $m$ times.\\
+So the time complexity of the algorithm is $$O(k)+m(O(\log k)+O(1)) = O(k+m\log k)$$
+
+
+
+\end{parts}
 
 \end{solution}
 
-\end{questions}
 
+\question
+\begin{solution}
+\begin{parts}
+\part 
+For any number $n$, its binary representation $$n=\sum_{i=0}^{\lfloor \log_2 n \rfloor} a_i 2^i$$is unique.\\
+Note that a binomial heap of size $n$ has n nodes in total and it only consist of trees of size $2^i$, the tree combination of a binomial heap is therefore unique for every $n$. More specifically, binomial tree $B_i$ exists if and only if $a_i$ in the binary representation equals 1. Thus, for a binomial heap of size $n$, there are $\alpha(n)$ binomial trees in the forest. \\
+Since the forest consists a total of $n$ nodes and for each individual tree, the number of edges equals the number of nodes minus one, a binomial heap with $n$ elements has exactly $n-\alpha(n)$ edges.
+
+\part
+To make the life easier, let's say the right-most digit ($a_0$) of a binary number is the $0^{th}$ digit, and the second right-most digit ($a_1$) is the $1^{st}$ digit, et cetera.\\
+According to the algorithm, a pairwise comparison is made when joining two binomial trees ($B_i$) into a larger one ($B_{i+1}$). In binary representation, this is represented by a carry from the $i^{th}$ digit to the $i+1^{th}$ digit (which may lead to further carries) in arithmetic. So, the total number of pairwise comparisons of inserting $k$ elements into a binomial heap of size $n$ equals the total number of carries performed when $n$ is incremented by one $k$ times in the binary form.\\
+Note that for the $i^{th}$ digit, carry is performed once every $2^{i+1}$ increments. In the worst case, at most $\lceil\log_2 n\rceil$ additional carries are performed because of the existing 1's in the binary form of $n$. (For example, adding 1 to 31($11111_2$) needs additional 5 carries). So, the average cost of an insertion is $$\dfrac{1}{k} (\sum_{i=1}^{\lceil \log_2 k\rceil} \lfloor\dfrac{k}{2^i}\rfloor + \lceil\log_2 n\rceil) \leq \dfrac{1}{k}(k+\log_2 n+1) $$When $k>\log_2 n$, $$\dfrac{1}{k}(k+\log_2 n+1) < \dfrac{1}{k}(2k+1) = 2+\dfrac{1}{k} \in O(1)$$
+So, the average cost of $k$ successive insertions is bounded by constant.
+
+\end{parts}
+
+\end{solution}
+\end{questions}
 
 \end{document}
