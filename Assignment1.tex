@@ -91,7 +91,7 @@ follows immediately.
 \begin{solution}
 \begin{parts}
 \part
-First, create an min heap using the smallest element in each list. In each node, also record the list where the integer comes from and the integer's position in the list.
+First, create an min heap using the smallest (first) element in each list. In each node, also record the list where the integer comes from and the integer's position in the list.
 Then execute the following steps $m$ times.
 \begin{codebox}
     \li Extract the minimum element in the min heap.
@@ -103,7 +103,7 @@ Then execute the following steps $m$ times.
 This algorithm works because the min heap contains the smallest element of each list when it is created. When the minimum in the min heap is taken, the minimum of the unprinted integers in the same list is added to the min heap, unless all elements in that list has been printed. This ensures that the min heap always contains the smallest unprinted integer across the lists. So when minimum is extracted, it must be the smallest unprinted integer. \\Thus, the first $m$ integers extracted from the min heap must be the smallest $m$ elements from $A_1$ to $A_n$ in increasing sorted order.
 
 \part
-Building a min heap of $k$ elements by min-heapify takes $O(k)$ time.\\
+Both finding the first element in the list k times and building a min heap of $k$ elements by min-heapify takes $O(k)$ time.\\
 Note that the heap has at most $k$ elements, so insertion, extraction takes $O(\log k)$ time. Printing, find the next element in the list takes $O(1)$ time. The loop is executed $m$ times.\\
 So the time complexity of the algorithm is $$O(k)+m(O(\log k)+O(1)) = O(k+m\log k)$$
 
